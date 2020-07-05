@@ -1,9 +1,9 @@
-const bcrypt = require("bcrypt");
+const bcrypt = require('bcrypt');
 
-const User = require("../../models/User");
+const User = require('../../models/User');
 const {
   registrationValidation
-} = require("../../validation/userValidation");
+} = require('../../validation/userValidation');
 
 const saltRounds = 10;
 
