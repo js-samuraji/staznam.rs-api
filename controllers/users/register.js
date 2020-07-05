@@ -41,7 +41,7 @@ const register = async (req, res) => {
 
     // Generate a salt and hash
     bcrypt.hash(req.body.password, saltRounds, (err, hash) => {
-      if (err) return console.error(err);
+      if (err) return res.status(500).end();
 
       // Save user to database
       const user = new User({
@@ -51,7 +51,7 @@ const register = async (req, res) => {
       });
 
       user.save((err, user) => {
-        if (err) return console.error(err);
+        if (err) return res.status(500).end();
 
         return res.status(200).json({
           success: true,
