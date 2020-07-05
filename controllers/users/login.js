@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const User = require('../../models/User');
 const {
@@ -35,10 +36,18 @@ const login = async (req, res) => {
         message: 'Wrong password'
       });
 
+      // Generate a token
+      const accessToken = jwt.sign({
+        sub: user._id,
+        iat: Date.now()
+      }, process.env.ACCESS_TOKEN_SECRET, {
+        expiresIn: '7d'
+      });
       return res.status(200).json({
         success: true,
         message: 'Logged in',
-        username: user.username
+        username: user.username,
+        accessToken: accessToken
       });
     });
   } catch (err) {
