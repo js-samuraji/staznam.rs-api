@@ -1,8 +1,8 @@
 const User = require("../../models/User");
 
-const getUsers = async (_req, res) => {
+const getUsers = (_req, res) => {
   User.find((err, users) => {
-    if (err) return console.error(err);
+    if (err) return res.status(500).end();
     res.status(200).json(users);
   });
 };
