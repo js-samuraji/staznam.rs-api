@@ -14,7 +14,10 @@ const register = async (req, res) => {
     const {
       error
     } = registrationValidation(req.body);
-    if (error) return res.status(400).json(error.details[0].message);
+    if (error) return res.status(400).json({
+      success: false,
+      message: error.details[0].message
+    });
 
     // Check whether the email already exists
     const emailExists = await User.findOne({

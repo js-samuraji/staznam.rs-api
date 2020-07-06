@@ -12,7 +12,10 @@ const login = async (req, res) => {
     const {
       error
     } = loginValidation(req.body);
-    if (error) res.status(400).json(error.details[0].message);
+    if (error) res.status(400).json({
+      success: false,
+      message: error.details[0].message
+    });
 
     // Find user
     const user = await User.findOne({
@@ -32,7 +35,7 @@ const login = async (req, res) => {
       if (err) return res.status(500).end();
 
       if (!same) return res.status(400).json({
-        success: 'False',
+        success: false,
         message: 'Wrong password'
       });
 
