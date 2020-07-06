@@ -1,11 +1,11 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
   username: String,
   role: {
     type: String,
-    enum: ["admin", "editor", "user"],
-    default: "user",
+    enum: ['admin', 'editor', 'user'],
+    default: 'user',
   },
   fullName: String,
   dob: Date,
@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema({
   image: String,
   blockList: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User"
+    ref: 'User'
   }],
   email: String,
   password: {
@@ -24,6 +24,6 @@ const userSchema = new mongoose.Schema({
   timestamps: true
 });
 
-const User = mongoose.model("User", userSchema);
+const User = mongoose.model('User', userSchema);
 
 module.exports = User;

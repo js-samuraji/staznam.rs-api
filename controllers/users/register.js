@@ -1,9 +1,10 @@
-const bcrypt = require("bcrypt");
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
-const User = require("../../models/User");
+const User = require('../../models/User');
 const {
   registrationValidation
-} = require("../../validation/userValidation");
+} = require('../../validation/userValidation');
 
 const saltRounds = 10;
 
@@ -13,7 +14,10 @@ const register = async (req, res) => {
     const {
       error
     } = registrationValidation(req.body);
-    if (error) return res.status(400).json(error.details[0].message);
+    if (error) return res.status(400).json({
+      success: false,
+      message: error.details[0].message
+    });
 
     // Check whether the email already exists
     const emailExists = await User.findOne({
@@ -53,9 +57,17 @@ const register = async (req, res) => {
       user.save((err, user) => {
         if (err) return res.status(500).end();
 
+        // Generate a token
+        const accessToken = jwt.sign({
+          sub: user._id,
+          iat: Date.now()
+        }, process.env.ACCESS_TOKEN_SECRET, {
+          expiresIn: '7d'
+        });
         return res.status(200).json({
           success: true,
-          username: user.username
+          username: user.username,
+          accessToken: accessToken
         });
       });
     });
