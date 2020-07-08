@@ -23,7 +23,7 @@ const register = async (req, res) => {
     if (emailExists)
       return res
         .status(400)
-        .json("Email already registered");
+        .json('Email already registered');
 
     // Check whether the username already exists
     const usernameExists = await User.findOne({
@@ -32,7 +32,7 @@ const register = async (req, res) => {
     if (usernameExists)
       return res
         .status(400)
-        .json("Username already taken");
+        .json('Username already taken');
 
     // Generate a salt and hash
     bcrypt.hash(req.body.password, saltRounds, (err, hash) => {
