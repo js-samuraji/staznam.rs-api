@@ -14,10 +14,7 @@ const register = async (req, res) => {
     const {
       error
     } = registrationValidation(req.body);
-    if (error) return res.status(400).json({
-      success: false,
-      message: error.details[0].message
-    });
+    if (error) return res.status(400).json(error.details[0].message);
 
     // Check whether the email already exists
     const emailExists = await User.findOne({
@@ -26,10 +23,7 @@ const register = async (req, res) => {
     if (emailExists)
       return res
         .status(400)
-        .json({
-          success: false,
-          message: "Email already registered"
-        });
+        .json("Email already registered");
 
     // Check whether the username already exists
     const usernameExists = await User.findOne({
@@ -38,10 +32,7 @@ const register = async (req, res) => {
     if (usernameExists)
       return res
         .status(400)
-        .json({
-          success: false,
-          message: "Username already taken"
-        });
+        .json("Username already taken");
 
     // Generate a salt and hash
     bcrypt.hash(req.body.password, saltRounds, (err, hash) => {
@@ -64,11 +55,7 @@ const register = async (req, res) => {
         }, process.env.ACCESS_TOKEN_SECRET, {
           expiresIn: '7d'
         });
-        return res.status(200).json({
-          success: true,
-          username: user.username,
-          accessToken: accessToken
-        });
+        return res.status(201).json(accessToken);
       });
     });
   } catch (err) {

@@ -12,10 +12,7 @@ const login = async (req, res) => {
     const {
       error
     } = loginValidation(req.body);
-    if (error) res.status(400).json({
-      success: false,
-      message: error.details[0].message
-    });
+    if (error) res.status(400).json(error.details[0].message);
 
     // Find user
     const user = await User.findOne({
@@ -25,19 +22,13 @@ const login = async (req, res) => {
         username: req.body.login
       }]
     }).select('+password');
-    if (!user) return res.status(400).json({
-      success: false,
-      message: 'User not found'
-    });
+    if (!user) return res.status(400).json('User not found');
 
     // Check the password
     bcrypt.compare(req.body.password, user.password, (err, same) => {
       if (err) return res.status(500).end();
 
-      if (!same) return res.status(400).json({
-        success: false,
-        message: 'Wrong password'
-      });
+      if (!same) return res.status(400).json('Wrong password');
 
       // Generate a token
       const accessToken = jwt.sign({
@@ -46,12 +37,7 @@ const login = async (req, res) => {
       }, process.env.ACCESS_TOKEN_SECRET, {
         expiresIn: '7d'
       });
-      return res.status(200).json({
-        success: true,
-        message: 'Logged in',
-        username: user.username,
-        accessToken: accessToken
-      });
+      return res.status(200).json(accessToken);
     });
   } catch (err) {
     res.status(500).end();
